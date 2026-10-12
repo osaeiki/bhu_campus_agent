@@ -1,4 +1,4 @@
-"""全局配置：从项目 .env（以及上级 E:\\pythonProject1\\.env）加载。"""
+"""全局配置：从项目 .env（以及上级目录的 .env）加载。"""
 import os
 from pathlib import Path
 
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 优先项目内 .env，其次读取上级目录（E:\pythonProject1\.env）中已有的 DeepSeek Key
+# 优先读项目内 .env，其次读上级目录的 .env（便于把 Key 放在仓库外的上层目录）
 load_dotenv(BASE_DIR / ".env", override=True)
 load_dotenv(BASE_DIR.parent / ".env", override=False)
 

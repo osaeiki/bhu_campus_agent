@@ -10,13 +10,13 @@
     # 打包脚本自己所在的项目
     .venv\\Scripts\\python scripts\\pack_for_upload.py
 
-    # 打包另一个项目（推荐：拿校园助手的虚拟环境来跑）
-    E:\\pythonProject1\\bhu_campus_agent\\.venv\\Scripts\\python ^
-        E:\\pythonProject1\\bhu_campus_agent\\scripts\\pack_for_upload.py ^
-        --project E:\\pythonProject1\\travel_agent
+    # 打包另一个项目：把下面这行的路径换成你自己的
+    <项目目录>/scripts/pack_for_upload.py --project <另一个项目目录>
+
+
 
     # 需要把某个默认被排除的目录也打进去（例如 data）
-    ... --project E:\\pythonProject1\\travel_agent --include data
+    ... --project <另一个项目目录> --include data
 
 产出：项目上级目录下的 <项目名>_upload.zip，压缩包内的路径以项目根为起点，
       解压时直接解到服务器上的项目目录即可。
