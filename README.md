@@ -3,7 +3,7 @@
 部署在本地的北华大学北校区校园 Agent 网页版，后端 FastAPI + SQLite，大模型使用 DeepSeek，
 复杂功能（浏览器自动化、网页搜索等）通过**外部 MCP** 承载。全部 P0 功能，无云端依赖（除大模型 API 外）。
 
-> 项目地址：`E:\pythonProject1\bhu_campus_agent`
+> 仓库地址：https://github.com/osaeiki/bhu_campus_agent
 
 ## 已实现功能（P0 清单）
 
@@ -89,7 +89,7 @@ FastAPI 后端
 
 ### 方式二：命令行
 ```bat
-cd /d E:\pythonProject1\bhu_campus_agent
+cd /d <你的项目目录>
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 set PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright
@@ -126,7 +126,7 @@ JWT_SECRET=随机字符串
 PORT=8000
 AMAP_API_KEY=你的高德 Web 服务 Key（可留空，留空则不启用高德地图 MCP）
 ```
-若 `E:\pythonProject1\.env` 已有 `DEEPSEEK_API_KEY`，程序会自动读取，项目内 `.env` 可选。
+若**上级目录**的 `.env` 已有 `DEEPSEEK_API_KEY`，程序会自动读取，项目内 `.env` 可选。
 - 高德 Key 申请：lbs.amap.com 控制台 → 应用管理 → 我的应用 → 创建应用 → 添加 Key → 服务平台选「Web服务」。
 
 ## 外部 MCP 说明
@@ -150,7 +150,7 @@ AMAP_API_KEY=你的高德 Web 服务 Key（可留空，留空则不启用高德�
 
 ## 常见问题
 
-- **启动提示 DeepSeek 401**：检查 `.env` 或上级 `E:\pythonProject1\.env` 的 `DEEPSEEK_API_KEY`。
+- **启动提示 DeepSeek 401**：检查项目内 `.env` 或上级目录 `.env` 的 `DEEPSEEK_API_KEY`。
 - **MCP browser 显示离线**：`scripts\install.bat` 需完整执行（Playwright Chromium 要下载）；
   离线不影响知识问答，也可在管理后台点「测试」查看错误详情。
 - **端口被占用**：改 `.env` 中 `PORT`。
