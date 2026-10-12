@@ -1,0 +1,11 @@
+[
+  {
+    "name": "browser",
+    "command": ".venv/Scripts/python.exe",
+    "args": ["scripts/browser_mcp_launcher.py"],
+    "env": {},
+    "transport": "stdio",
+    "enabled": true,
+    "description": "浏览器自动化（Playwright）：联网搜索、网页浏览与操作等复杂功能"
+  }
+]

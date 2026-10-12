@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>北华校园助手 · 北华大学北校区</title>
+  <!-- ?v= 版本号用于强制刷新缓存：改完前端样式/脚本后把日期改一下即可，避免浏览器用旧文件 -->
+  <link rel="stylesheet" href="/static/css/style.css?v=20260928">
+</head>
+<body>
+  <!-- 登录页 -->
+  <div id="login-view" class="login-view">
+    <div class="login-card">
+      <div class="login-logo">北</div>
+      <h1>北华校园助手</h1>
+      <p class="subtitle">北华大学北校区 · 本地校园 Agent</p>
+      <form id="login-form">
+        <label>账号
+          <input type="text" id="login-username" autocomplete="username" placeholder="如 student" required>
+        </label>
+        <label>密码
+          <input type="password" id="login-password" autocomplete="current-password" placeholder="如 student123" required>
+        </label>
+        <div id="login-error" class="error-text hidden"></div>
+        <button type="submit" class="btn primary block">登 录</button>
+      </form>
+      <div class="demo-hint">
+        演示账号：admin/admin123（管理员）· teacher/teacher123（教师）· student/student123（学生）· visitor/visitor123（访客）
+      </div>
+    </div>
+  </div>
+
+  <!-- 对话页 -->
+  <div id="chat-view" class="chat-view hidden">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <div class="brand">北华校园助手</div>
+        <div class="brand-sub">北校区 · 本地部署</div>
+      </div>
+      <div class="user-card">
+        <div class="user-avatar" id="user-avatar">李</div>
+        <div class="user-meta">
+          <div class="user-name" id="user-name">--</div>
+          <div class="user-role" id="user-role">--</div>
+          <div class="user-ext" id="user-ext"></div>
+        </div>
+      </div>
+      <nav class="side-nav">
+        <button class="nav-btn" id="btn-new-chat">＋ 新对话</button>
+        <button class="nav-btn hidden" id="btn-admin">⚙ 管理后台</button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="mcp-status" id="mcp-status">外部 MCP：检查中…</div>
+        <button class="nav-btn ghost" id="btn-logout">退出登录</button>
+      </div>
+    </aside>
+
+    <main class="chat-main">
+      <header class="chat-header">
+        <div class="chat-header-left">
+          <h2>北华校园助手</h2>
+          <span class="chat-sub">能查课表成绩、请假报修、预约场地、解答校园问题；复杂功能由外部 MCP（浏览器自动化）承载</span>
+        </div>
+        <button id="btn-notif" class="notif-bell" title="消息通知（审批结果 / 人工回复会主动推送）">
+          🔔<span id="notif-badge" class="notif-badge hidden">0</span>
+        </button>
+      </header>
+
+      <div id="messages" class="messages"></div>
+
+      <div id="ticket-banner" class="ticket-banner hidden"></div>
+
+      <div id="notif-panel" class="notif-panel hidden">
+        <div class="notif-head">
+          <b>消息通知</b>
+          <span>
+            <button id="btn-notif-refresh" class="act-btn">刷新</button>
+            <button id="btn-notif-readall" class="act-btn">全部已读</button>
+          </span>
+        </div>
+        <div id="notif-list" class="notif-list"></div>
+      </div>
+
+      <div class="composer-wrap">
+        <div id="tool-status" class="tool-status hidden"></div>
+        <div class="composer">
+          <textarea id="chat-input" rows="1" placeholder="问点什么… 例如：北校区第三教学楼在哪？/ 帮我请明天的假 / 预约明晚研讨室 / 查一下我的成绩"></textarea>
+          <button id="btn-send" class="btn primary send">发送</button>
+        </div>
+        <div class="composer-hint">演示数据仅供本地体验，正式数据以校内系统为准 · 回复可用 👍/👎 反馈</div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast-wrap" class="toast-wrap"></div>
+
+  <script src="/static/js/app.js?v=20260928"></script>
+</body>
+</html>

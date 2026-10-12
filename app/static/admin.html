@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>北华校园助手 · 管理后台</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260928">
+  <link rel="stylesheet" href="/static/css/admin.css?v=20260928">
+</head>
+<body>
+  <div class="admin-shell">
+    <button id="admin-notif-bell" class="admin-notif-bell" title="消息通知（学生提交请假/报修/工单会推送给管理员）">
+      🔔<span id="admin-notif-badge" class="notif-badge hidden">0</span>
+    </button>
+    <div id="admin-notif-panel" class="admin-notif-panel hidden">
+      <div class="notif-head">
+        <b>消息通知</b>
+        <span><button id="admin-notif-readall" class="act-btn">全部已读</button></span>
+      </div>
+      <div id="admin-notif-list" class="notif-list"></div>
+    </div>
+    <aside class="admin-side">
+      <div class="admin-brand">北华校园助手</div>
+      <div class="admin-brand-sub">管理后台</div>
+      <nav id="admin-nav">
+        <button class="tab active" data-tab="overview">📊 概览</button>
+        <button class="tab" data-tab="knowledge">📚 知识库</button>
+        <button class="tab" data-tab="users">👥 用户</button>
+        <button class="tab" data-tab="mcp">🔌 外部MCP</button>
+        <button class="tab" data-tab="applications">📝 申请审批</button>
+        <button class="tab" data-tab="tickets">🎫 人工工单</button>
+        <button class="tab" data-tab="logs">🧾 审计日志</button>
+        <button class="tab" data-tab="feedback">💬 用户反馈</button>
+      </nav>
+      <div class="admin-side-foot">
+        <a href="/" class="back-link">← 返回对话</a>
+        <button id="btn-admin-logout" class="back-link">退出登录</button>
+      </div>
+    </aside>
+    <main class="admin-main">
+      <section id="tab-overview" class="tab-panel active">
+        <h2>运行概览</h2>
+        <div id="stat-cards" class="stat-cards"></div>
+        <div class="two-col">
+          <div class="card">
+            <h3>最近 14 天提问量</h3>
+            <table id="daily-table" class="table"></table>
+          </div>
+          <div class="card">
+            <h3>最常调用工具</h3>
+            <table id="tools-table" class="table"></table>
+          </div>
+        </div>
+        <div class="card">
+          <h3>意图分布（最近 200 次）</h3>
+          <div id="intent-table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="tab-knowledge" class="tab-panel">
+        <h2>知识库管理</h2>
+        <p class="hint">支持文档（md / txt / docx）、PDF、表格（xlsx / csv）。服务启动时自动扫描 seed/kb_files 与 data/uploads，按文件内容哈希增量导入；检索采用 BM25 + 向量混合召回（RAG）。</p>
+        <div class="toolbar">
+          <input id="kb-search" placeholder="搜索标题/内容" class="input">
+          <select id="kb-type" class="input" style="min-width:120px">
+            <option value="">全部类型</option>
+            <option value="text">文档</option>
+            <option value="pdf">PDF 文件</option>
+            <option value="table">表格</option>
+          </select>
+          <button id="btn-kb-search" class="btn primary">搜索</button>
+          <button id="btn-kb-rebuild" class="btn">重建索引</button>
+          <button id="btn-kb-rescan" class="btn">重新扫描知识文件</button>
+          <button id="btn-kb-upload" class="btn">⬆ 上传文件入库</button>
+          <input type="file" id="kb-file" class="hidden" accept=".md,.markdown,.txt,.pdf,.docx,.xlsx,.xlsm,.csv">
+          <button id="btn-kb-add" class="btn primary">＋ 新增文档</button>
+        </div>
+        <div id="kb-index-info" class="hint"></div>
+        <div id="kb-table-wrap"></div>
+        <div class="card">
+          <h3>检索测试（BM25 + 向量融合，可对比两路召回效果）</h3>
+          <div class="toolbar">
+            <input id="kb-test-q" class="input" placeholder="输入学生可能问的问题，例如：第二食堂三楼有什么 / 生病了怎么请假">
+            <select id="kb-test-mode" class="input" style="min-width:130px">
+              <option value="hybrid">混合检索</option>
+              <option value="bm25">只用 BM25</option>
+              <option value="vector">只用向量</option>
+            </select>
+            <button id="btn-kb-test" class="btn primary">检索</button>
+          </div>
+          <div id="kb-test-result"></div>
+        </div>
+        <div id="kb-form" class="card hidden">
+          <h3 id="kb-form-title">新增文档</h3>
+          <input id="kb-title" class="input" placeholder="标题">
+          <input id="kb-category" class="input" placeholder="分类（如 校区概况 / 食堂 / 办事流程）">
+          <input id="kb-source" class="input" placeholder="来源">
+          <textarea id="kb-content" class="textarea" rows="6" placeholder="正文内容"></textarea>
+          <div class="form-actions">
+            <button id="btn-kb-save" class="btn primary">保存</button>
+            <button id="btn-kb-cancel" class="btn">取消</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-users" class="tab-panel">
+        <h2>用户管理</h2>
+        <div class="toolbar">
+          <button id="btn-user-add" class="btn primary">＋ 新增用户</button>
+        </div>
+        <div id="user-form" class="card hidden">
+          <h3>新增用户</h3>
+          <div class="form-grid">
+            <input id="u-username" class="input" placeholder="账号">
+            <input id="u-password" class="input" placeholder="密码">
+            <select id="u-role" class="input">
+              <option value="student">学生</option>
+              <option value="teacher">教师</option>
+              <option value="admin">管理员</option>
+              <option value="visitor">访客</option>
+            </select>
+            <input id="u-name" class="input" placeholder="姓名">
+            <input id="u-student-no" class="input" placeholder="学号/工号">
+            <input id="u-department" class="input" placeholder="学院/部门">
+            <input id="u-class" class="input" placeholder="班级（如 机械2301）">
+          </div>
+          <div class="form-actions">
+            <button id="btn-user-save" class="btn primary">保存</button>
+            <button id="btn-user-cancel" class="btn">取消</button>
+          </div>
+        </div>
+        <div id="users-table-wrap"></div>
+      </section>
+
+      <section id="tab-mcp" class="tab-panel">
+        <h2>外部 MCP 服务</h2>
+        <p class="hint">复杂功能（浏览器自动化、网页搜索等）通过外部 MCP 承载。服务离线不影响基础问答，Agent 会自动降级。</p>
+        <div class="toolbar">
+          <button id="btn-mcp-add" class="btn primary">＋ 添加 MCP 服务</button>
+          <button id="btn-mcp-refresh" class="btn">刷新状态</button>
+        </div>
+        <div id="mcp-form" class="card hidden">
+          <h3>添加 MCP 服务（stdio 传输）</h3>
+          <div class="form-grid">
+            <input id="mcp-name" class="input" placeholder="名称（如 browser）">
+            <input id="mcp-command" class="input" placeholder="命令，如 .venv/Scripts/python.exe">
+            <input id="mcp-args" class="input" placeholder="参数 JSON，如 [\"scripts/browser_mcp_launcher.py\"]">
+            <input id="mcp-env" class="input" placeholder="环境变量 JSON（可选）">
+            <select id="mcp-transport" class="input">
+              <option value="stdio">stdio（本地进程）</option>
+              <option value="http">http（远程 MCP，command 填 URL，env 填请求头 JSON）</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button id="btn-mcp-save" class="btn primary">保存并启动</button>
+            <button id="btn-mcp-cancel" class="btn">取消</button>
+          </div>
+        </div>
+        <div id="mcp-table-wrap"></div>
+      </section>
+
+      <section id="tab-applications" class="tab-panel">
+        <h2>申请审批</h2>
+        <div class="sub-tabs">
+          <button class="sub-tab active" data-sub="leaves">请假</button>
+          <button class="sub-tab" data-sub="repairs">报修</button>
+          <button class="sub-tab" data-sub="bookings">场地预约</button>
+        </div>
+        <div id="app-leaves" class="sub-panel active"></div>
+        <div id="app-repairs" class="sub-panel"></div>
+        <div id="app-bookings" class="sub-panel"></div>
+      </section>
+
+      <section id="tab-tickets" class="tab-panel">
+        <h2>人工工单</h2>
+        <div id="tickets-wrap"></div>
+      </section>
+
+      <section id="tab-logs" class="tab-panel">
+        <h2>审计日志</h2>
+        <div id="logs-wrap"></div>
+      </section>
+
+      <section id="tab-feedback" class="tab-panel">
+        <h2>用户反馈</h2>
+        <div id="feedback-wrap"></div>
+      </section>
+    </main>
+  </div>
+  <script src="/static/js/admin.js?v=20260928"></script>
+</body>
+</html>
